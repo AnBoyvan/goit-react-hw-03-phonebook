@@ -5,6 +5,10 @@ import { ContactList } from './ContactList/ContactList';
 import { Filter } from './Filter/Filter';
 import css from './App.module.css';
 
+// { id: 'id-1', name: 'Rosie Simpson', number: '459-12-56' },
+// { id: 'id-2', name: 'Hermione Kline', number: '443-89-12' },
+// { id: 'id-3', name: 'Eden Clements', number: '645-17-79' },
+// { id: 'id-4', name: 'Annie Copeland', number: '227-91-26' },
 export class App extends Component {
   state = {
     contacts: [
@@ -15,6 +19,13 @@ export class App extends Component {
     ],
     filter: '',
   };
+
+  componentDidMount() {
+    const parsedContacts = JSON.parse(localStorage.getItem('contacts'));
+    if (parsedContacts) {
+      this.setState({ contacts: parsedContacts });
+    }
+  }
 
   addContact = contact => {
     const { contacts } = this.state;
@@ -55,13 +66,6 @@ export class App extends Component {
     );
   };
 
-  componentDidMount() {
-    const parsedContacts = JSON.parse(localStorage.getItem('contacts'));
-    if (parsedContacts) {
-      this.setState({ contacts: parsedContacts });
-    }
-  }
-
   componentDidUpdate(_, prevState) {
     const { contacts } = this.state;
     if (contacts !== prevState.contacts) {
@@ -70,14 +74,20 @@ export class App extends Component {
   }
 
   render() {
-    const { filter } = this.state;
+    const { filter, contacts } = this.state;
     const filteredContacts = this.getFilteredContacts();
+
     return (
       <div className={css.section}>
         <h1>Phonebook</h1>
         <ContactForm addContact={this.addContact} />
         <h2>Contacts</h2>
         <Filter value={filter} onChange={this.changeFilter} />
+        {!Boolean(contacts.length) && (
+          <p className={css.notification}>
+            There are no contacts in the phonebook
+          </p>
+        )}
         <ContactList
           contacts={filteredContacts}
           deleteContact={this.deleteContact}

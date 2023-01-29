@@ -24,3 +24,9 @@
   margin-bottom: 10px;
   text-align: center;
 }
+
+.notification {
+  font-size: 18px;
+  font-style: italic;
+  color: brown;
+}
